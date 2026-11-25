@@ -11,10 +11,14 @@ LINE = "100 entries, one 503, nine key rotations \u2014 and my whole week's pay 
 
 def main():
     assert 1 <= len(LINE) <= 100, "line must be 1-100 characters"
+    assert "\n" not in LINE, "entry must be a single line"
+    assert LINE.strip(), "entry must not be only whitespace"
     os.makedirs("/output", exist_ok=True)
     with open("/output/entry.txt", "w", encoding="utf-8") as f:
         f.write(LINE)
     os.chmod("/output/entry.txt", 0o644)
+    with open("/output/entry.txt", encoding="utf-8") as f:
+        assert f.read() == LINE, "written entry must round-trip byte-identical"
 
 
 if __name__ == "__main__":
